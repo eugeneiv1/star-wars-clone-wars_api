@@ -1,0 +1,82 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "My title",
+    "version": "0.1",
+    "description": "Description"
+  },
+  "tags": [
+    {
+      "name": "auth",
+      "description": "Description"
+    },
+    {
+      "name": "users",
+      "description": "Descr"
+    }
+  ],
+  "paths": {
+      "/auth/admin/signup": {
+        "post": {
+          "tags": ["auth"],
+          "requestBody": {
+            "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/mySchema"
+              }
+            }
+          }
+          },
+          "responses": {
+            "200": {
+              "description": "Return created admin",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/userToResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+  },
+  "components": {
+    "schemas": {
+      "mySchema": {
+        "type": "object",
+        "properties": {
+          "prop1": {
+            "type": "string",
+            "title": "sdfsdf",
+            "pattern": "^[^\\s@]+@([^\\s@.,]+\\.)+[^\\s@.,]{2,}$"
+          }
+        }
+      },
+      "userToResponse": {
+        "type": "object",
+        "required": [
+          "email",
+          "password"
+        ],
+        "properties": {
+          "_id": {
+            "type": "string"
+          },
+          "userName": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "description": "nkngs"
+          }
+        }
+      }
+    }
+  }
+}

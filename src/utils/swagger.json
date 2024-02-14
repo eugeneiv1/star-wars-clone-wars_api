@@ -1,0 +1,233 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "0.0",
+    "title": "StarWars Clone Wars API",
+    "description": "Use this API to get info about Star ars Clone Wars series, no matter at dark or light side you are. May the force be with You"
+  },
+  "host": "localhost:5050",
+  "tags": [
+    {
+      "name": "auth",
+      "description": "How to be an admin. Feel Your power"
+    },
+    {
+      "name": "users",
+      "description": "All about action that can do users (padawan's or masters (admins))"
+    }
+  ],
+  "paths": {
+    "/auth/admin/signup":{
+      "post": {
+        "tags": ["auth"],
+        "summary": "Used to signup user with admin role",
+        "parameters": [{
+          "name": "data",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "email":{
+                "type": "string"
+              },
+              "password": {
+                "type": "string"
+              },
+              "adminPassword": {
+                "type": "string"
+              },
+              "userName": {
+                "type": "string"
+              }
+            }
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "Return created user",
+            "schema": {
+              "$ref": "#/definitions/userToResponse"
+            }
+          }
+        }
+      }
+    },
+    "/auth/admin/signin": {
+      "post": {
+        "tags": ["auth"],
+        "summary": "Log in as admin",
+        "parameters": [
+          {
+            "name": "data",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/signIn"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns pair of jwt tokens(access and refresh)",
+            "schema": {
+              "$ref": "#/definitions/tokenPair"
+            }
+          }
+        }
+      }
+    },
+    "/auth/signup" :{
+      "post": {
+        "tags": ["auth"],
+        "summary": "Used to signup user",
+        "parameters": [{
+          "name": "data",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "email":{
+                "type": "string"
+              },
+              "password": {
+                "type": "string"
+              },
+              "userName": {
+                "type": "string"
+              }
+            }
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "Return created user",
+            "schema": {
+              "$ref": "#/definitions/userToResponse"
+            }
+          }
+        }
+      }
+    },
+    "/auth/signin" :{
+      "post": {
+        "tags": ["auth"],
+        "security": [],
+        "summary": "Used to signin as user",
+        "parameters": [{
+          "name": "data",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "example": {
+              "email": "string"
+            },
+            "properties": {
+              "email":{
+                "type": "string",
+                "pattern": "^[^\\s@]+@([^\\s@.,]+\\.)+[^\\s@.,]{2,}$"
+              },
+              "password": {
+                "type": "string"
+              },
+              "userName": {
+                "type": "string"
+              }
+            }
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "Return created user",
+            "schema": {
+              "$ref": "#/definitions/userToResponse"
+            }
+          }
+        }
+      }
+    },
+    "/users/user/:id": {
+      "delete": {
+        "tags": ["users"],
+        "security": [
+          {
+            "jwtAuth": ["jwtAuth"]
+          }
+        ],
+        "summary": "Used to delete user (admin permissions required)",
+        "parameters": [
+          {
+            "name": ":id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User deleted"
+          },
+          "401": {
+            "description": "Access denied due to permission"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "userToResponse": {
+      "type": "object",
+      "required": ["email", "password"],
+      "properties": {
+        "_id": {
+          "type": "string"
+        },
+        "userName": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        },
+        "email":{
+          "type": "string",
+          "description": "nkngs"
+        }
+      }
+    },
+    "signIn": {
+      "type": "object",
+      "required": ["email", "password"],
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "tokenPair": {
+      "type": "object",
+      "properties": {
+        "accessToken": {
+          "type": "string"
+        },
+        "refreshToken": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "jwtAuth": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "Authorization"
+    }
+  }
+}
